@@ -1,0 +1,136 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Product">
+
+	<!-- 상품목록 불러오기 -->
+	<resultMap type="Product" id="ProductTopCategory">
+		<id column="product_id" property="product_id"/>
+		<result column="product_name" property="product_name"/>	
+		<result column="product_img" property="product_img"/>	
+		<result column="price" property="price"/>	
+		<result column="brand" property="brand"/>	
+		<association column="top_category_id" property="topCategory" javaType="TopCategory"
+		select="TopCategory.select"/>
+	</resultMap>
+	
+
+	<select id="selectAll" resultMap="ProductTopCategory">
+		select product_id, product_name , product_img, price, brand ,tc.top_category_id , top_name
+		from product p , top_category tc 
+		where p.top_category_id = tc.top_category_id 
+		order by product_id desc
+	</select>
+
+	 
+	<!-- 상품상세보기를 위한 한건가져오기 from.도균 
+	<select id="select" parameterType="int" resultType="Product">
+		select * from product where product_id=#{product_id}
+	</select>
+	-->
+	
+	<!-- 신제품 전시를 위한 목록불러오기 from.도균-->
+	<select id="selectNewItem" resultType="Product">
+		select * from product order by product_id desc limit 4;
+	</select>	
+	
+	<!-- 운동기구 목록 불러오기 from.도균-->
+	<select id="selectEquipment" resultType="Product">
+		select * from product where top_category_id=2 order by product_id desc;
+	</select>
+	
+	
+	<!-- 스포츠의류 목록 불러오기 from.도균-->
+	<select id="selectWear" resultType="Product">
+		select * from product where top_category_id=3 order by product_id desc;
+	</select>
+	
+	
+	<!-- 악세서리 목록 불러오기 from.도균-->
+	<select id="selectAccessory" resultType="Product">
+		select * from product where top_category_id=4 order by product_id desc;
+	</select>
+	
+	
+	<!-- 보조식품 목록 불러오기 from.도균-->
+	<select id="selectFood" resultType="Product">
+		select * from product where top_category_id=5 order by product_id desc;
+	</select>
+	
+	
+	
+	
+	
+
+	
+	
+
+	<!-- 단일상품 디테일-->
+	<resultMap type="Product" id="ProductTopCategoryDetail">
+		<id column="product_id" property="product_id"/>
+		<result column="product_name" property="product_name"/>	
+		<result column="product_img" property="product_img"/>	
+		<result column="price" property="price"/>	
+		<result column="brand" property="brand"/>	
+		<result column="product_inven" property="product_inven"/>
+		<result column="product_detail" property="product_detail"/>
+		<result column="cnt" property="cnt"/>
+		<association column="top_category_id" property="topCategory" javaType="TopCategory"
+		select="TopCategory.select"/>
+	</resultMap>
+	
+	
+	<select id="select" resultMap="ProductTopCategoryDetail" parameterType="int">
+		select product_id, product_name , product_img, price, brand , tc.top_category_id , top_name , product_inven , product_detail
+		from product p , top_category tc 
+		where p.top_category_id = tc.top_category_id
+		and product_id = #{product_id}
+	</select>
+	
+	<select id="selectForCategory" resultMap="ProductTopCategoryDetail">
+		select p.top_category_id, tc.top_name, COUNT(tc.top_name) as cnt 
+		from product p, top_category tc 
+		WHERE p.top_category_id = tc.top_category_id 
+		group by p.top_category_id, tc.top_name  ;
+	</select>
+	
+	<select id="selectTodayRegisted" resultMap="ProductTopCategoryDetail">
+		select COUNT(product_id) as cnt 
+		from product 
+		where regdate > date_format(curdate( ), '%Y-%m-%d %H:%i:%s' ) ;
+	</select>
+	
+	<!-- 상품삭제 -->
+	<delete id="delete" parameterType="int">
+		delete from product where product_id=#{product_id}
+	</delete>	
+	
+	<insert id="insert" parameterType="Product">
+		insert into product(top_category_id, product_name, product_detail, price, brand, product_inven, product_img)
+		values (#{top_category_id}, #{product_name}, #{product_detail}, #{price}, #{brand}, #{product_inven},#{product_img})
+	</insert>
+	
+	<update id="update" parameterType="Product">
+		update product set top_category_id=#{top_category_id}, product_name=#{product_name}
+		, product_detail=#{product_detail}, price=#{price}, brand=#{brand}, product_inven=#{product_inven}, product_img=#{product_img}
+		where product_id = #{product_id}
+	</update>
+	<!-- 하루에 등록된 상품 수 -->
+	<select id="selectForDays" parameterType="int" resultType="Product">
+	
+		select COUNT(product_id) as cnt from product 
+		<![CDATA[
+		where regdate >=(CURDATE()-INTERVAL #{days} DAY)
+		and regdate <= (CURDATE()-INTERVAL #{days}-1 DAY)
+		]]>
+	</select>
+	<!-- 등록된 상품 수(일자별 누적) -->
+	<select id="selectForDaysCount" parameterType="int" resultType="Product">
+	<!-- days의 숫자는 3보다 작고 -2보다 커야 함 -->
+		select COUNT(product_id) as cnt from product 
+		<![CDATA[
+		where regdate >=(CURDATE()-INTERVAL 3 DAY)
+		and regdate <= (CURDATE()-INTERVAL #{days} DAY)
+		]]>
+	</select>
+	
+</mapper>

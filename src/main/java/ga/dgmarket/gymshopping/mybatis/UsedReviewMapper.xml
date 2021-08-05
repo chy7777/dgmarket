@@ -1,0 +1,22 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UsedReview">
+
+	<!-- 상점에서 리뷰 조회-->
+	<select id="selectAll" resultType="UsedReview" parameterType="int">
+		select r.used_review_id, r.writer_id, r.content, r.regdate, m.storename as writer 
+		from used_review r, member m
+		where r.writer_id=m.member_id and m.user_grade!=7 and
+		r.member_id=#{member_id} order by r.used_review_id desc
+	</select>
+	
+	<!-- 상점에 리뷰 한건 쓰기 -->
+	<insert id="regist" parameterType="UsedReview">
+		insert into used_review(member_id, writer_id, content) values(#{member_id}, #{writer_id}, #{content});
+	</insert>
+	
+	<!-- 상점에 리뷰 한건 삭제 -->
+	<delete id="delete" parameterType="int">
+		delete from used_review where used_review_id = #{used_review_id}
+	</delete>
+</mapper>

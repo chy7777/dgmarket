@@ -1,0 +1,56 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE configuration
+  PUBLIC "-//mybatis.org//DTD Config 3.0//EN"
+  "http://mybatis.org/dtd/mybatis-3-config.dtd">
+<configuration>
+
+	<typeAliases>
+		<!-- 쇼핑영역 from.도균 -->
+		<typeAlias type="ga.dgmarket.gymshopping.domain.Cart" alias="Cart" />
+	
+		<!-- 클라이언트 로그인 영역 from.조하연 -->
+		<typeAlias type="ga.dgmarket.gymshopping.domain.Member" alias="Member" />
+		
+		<!-- 관리자 영역 //공석민-->
+		<typeAlias type="ga.dgmarket.gymshopping.domain.Admin" alias="Admin" />
+		<typeAlias type="ga.dgmarket.gymshopping.domain.Product" alias="Product" />
+		<typeAlias type="ga.dgmarket.gymshopping.domain.Grade" alias="Grade" />
+		
+		<!-- 관리자/클라이언트 혼용 -->
+		<typeAlias type="ga.dgmarket.gymshopping.domain.TopCategory" alias="TopCategory" />
+		
+		<!-- 중고거래 관련 from.조성일 -->
+		<typeAlias type="ga.dgmarket.gymshopping.domain.UsedFavorites" alias="UsedFavorites"/>
+		<typeAlias type="ga.dgmarket.gymshopping.domain.UsedProduct" alias="UsedProduct"/>
+		<typeAlias type="ga.dgmarket.gymshopping.domain.UsedProductExtend" alias="UsedProductExtend"/>
+		<typeAlias type="ga.dgmarket.gymshopping.domain.UsedProductImg" alias="UsedProductImg"/>
+		<typeAlias type="ga.dgmarket.gymshopping.domain.UsedReview" alias="UsedReview"/>
+		<typeAlias type="ga.dgmarket.gymshopping.domain.UsedTag" alias="UsedTag"/>
+		<!-- qna 게시판 from.성일 -->
+		<typeAlias type="ga.dgmarket.gymshopping.domain.Qna" alias="Qna"/>
+	</typeAliases>
+	<mappers>
+		<!-- 쇼핑 영역 from.도균 -->
+		<mapper resource="ga/dgmarket/gymshopping/mybatis/CartMapper.xml"/>
+		
+		<!-- 클라이언트 로그인 영역 from.조하연-->
+		<mapper resource="ga/dgmarket/gymshopping/mybatis/MemberMapper.xml" />
+		<mapper resource="ga/dgmarket/gymshopping/mybatis/MemberJoinMapper.xml" />
+			
+		<!-- 관리자 영역 -->
+		<mapper resource="ga/dgmarket/gymshopping/mybatis/AdminMapper.xml" />
+		<mapper resource="ga/dgmarket/gymshopping/mybatis/ProductMapper.xml" />	
+		<!-- 관리자/클라이언트 혼용 -->
+		<mapper resource="ga/dgmarket/gymshopping/mybatis/TopCategoryMapper.xml" />	
+		<mapper resource="ga/dgmarket/gymshopping/mybatis/GradeMapper.xml" />	
+			
+		<!-- 중고거래 관련 from.조성일 -->
+		<mapper resource="ga/dgmarket/gymshopping/mybatis/UsedFavoritesMapper.xml"/>
+		<mapper resource="ga/dgmarket/gymshopping/mybatis/UsedProductMapper.xml"/>
+		<mapper resource="ga/dgmarket/gymshopping/mybatis/UsedProductImgMapper.xml"/>
+		<mapper resource="ga/dgmarket/gymshopping/mybatis/UsedReviewMapper.xml"/>
+		<mapper resource="ga/dgmarket/gymshopping/mybatis/UsedTagMapper.xml"/>
+		<!-- qna 게시판 from.성일 -->
+		<mapper resource="ga/dgmarket/gymshopping/mybatis/QnaMapper.xml"/>
+	</mappers>
+</configuration>

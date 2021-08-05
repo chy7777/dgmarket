@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Document</title>
+<style>
+    ul {
+        padding: 16px 0;
+    }
+
+    ul li {
+        display: inline-block;
+        margin: 0 5px;
+        font-size: 14px;
+        letter-spacing: -.5px;
+    }
+    
+    ul li.tag-item {
+        padding: 4px 8px;
+        background-color: #777;
+        color: #fff;
+    }
+
+    .tag-item:hover {
+        background-color: #262626;
+        color: #fff;
+    }
+
+    .del-btn {
+        font-size: 12px;
+        font-weight: bold;
+        cursor: pointer;
+        margin-left: 8px;
+    }
+</style>
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+<script>
+    var tag = {};
+    var counter = 0;
+
+    $(document).ready(function () {
+        //태그를 입력하고 스페이스 바 or enter키 입력 시 동작
+        $("#input_tag").on("keypress", function (e) {
+            var self = $(this);
+            // input 에 focus 되있을 때 엔터 및 스페이스바 입력시 구동
+            if (e.key === "Enter" || e.keyCode == 32) {
+                var tagValue = self.val(); // 값 가져오기
+
+                // 입력 값이 없으면 동작 불가능
+                if (tagValue !== "") {
+                    //태그의 최대 갯수는 5로 제한
+                    if($("li").length < 5){
+                        // 같은 태그가 있는지 검사한다. 있다면 해당값이 array 로 return 된다.
+                        var result = Object.values(tag).filter(function (word) {
+                            return word === tagValue;
+                        });
+
+                        // 태그 중복 검사
+                        if (result.length == 0) { 
+                            $("#tag-list").append("<li class='tag-item'>"+tagValue+"<span class='del-btn' index='"+counter+"'>x</span></li>");
+                            addTag(tagValue);
+                            self.val("");
+
+                            createTagArr();
+                        } else {
+                            alert("태그값이 중복됩니다.");
+                        }
+                    }else{
+                        alert("태그는 5개 까지 등록 가능합니다.");
+                    }
+                }
+                e.preventDefault(); // SpaceBar 시 빈공간이 생기지 않도록 방지
+            }
+        });
+
+        //글씨 뒤에 있는 x글자 클릭 시 삭제 기능
+        $(document).on("click", ".del-btn", function (e) {
+            var index = $(this).attr("index");
+            tag[index] = "";
+            $(this).parent().remove();
+        });
+});
+
+
+// 폼을 전송하기  tag 안에 있는 값을 하나의 뭉치로 만들어서 value에 담는다.
+function createTagArr () {
+    var list = document.getElementById("tag-list").getElementsByTagName("li");
+    var result = "";
+    for(var i = 0; i < list.length; i++){
+        if(i == list.length-1){
+            var val = (list[i].innerText).slice(0, list[i].innerText.length-1);
+            result += val;
+        }else{
+            var val = (list[i].innerText).slice(0, list[i].innerText.length-1);
+            result += val+",";
+        }
+    }
+    $("#tag").val(result);
+    console.log($("#tag").val());
+}
+
+   // 태그를 추가한다.
+    function addTag (value) {
+        tag[counter] = value; // 태그를 Object 안에 추가
+        counter++; // counter 증가 삭제를 위한 del-btn 의 고유 id 가 된다.
+    }
+
+</script>
+</head>
+<body>
+    <div class="tag_container">
+        <ul id="tag-list">
+        </ul>
+        <div>
+            <input type="hidden" id="tag"></input>
+            <input type="text" id="input_tag" maxlength="10" size="15" placeholder="태그입력" />
+        </div>
+    </div>
+</body>
+</html>

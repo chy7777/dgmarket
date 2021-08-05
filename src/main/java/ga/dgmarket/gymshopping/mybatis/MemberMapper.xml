@@ -1,0 +1,67 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Member">
+
+	<!-- 로그인 체크 -->
+	<select id="login" parameterType="Member" resultType="Member">
+		select *
+		from member where user_id=#{user_id} and password=#{password}
+	</select>
+
+	<select id="detail" parameterType="int" resultType="Member">
+		select * from
+		member where member_id=#{member_id}
+	</select>
+
+	<select id="selectAll" resultType="Member">
+		select * from member order by member_id desc
+	</select>
+
+	<update id="update" parameterType="Member">
+		update member set user_id=#{user_id}, password=#{password}, name=#{name},
+		storename=#{storename}, profile_img=#{profile_img}, phone=#{phone},
+		addr=#{addr}, email=#{email}, user_grade=#{user_grade} where member_id=#{member_id}
+	</update>
+	
+	<update id="update_noPass" parameterType="Member">
+		update member set user_id=#{user_id}, name=#{name},
+		storename=#{storename}, profile_img=#{profile_img}, phone=#{phone},
+		addr=#{addr}, email=#{email}, user_grade=#{user_grade} where member_id=#{member_id}
+	</update>
+	
+	<!-- user_grade 7 로 바꾸는 작업(탈퇴)-->
+	<update id="update2" parameterType="Member">
+		update member set user_grade=7 where member_id=#{member_id}
+	</update>
+	<!--  
+	<delete id="delete" parameterType="int">
+		delete from member where member_id=#{member_id}
+	</delete>
+	-->
+
+	<!-- 아이디 중복검사 -->
+  	<select id="idCheck" resultType="int" parameterType="String">
+  		select count(*) from member where user_id = #{user_id}
+  	</select>
+
+	<!-- 최근 한달 간 가입한 회원 수를 반환 -->
+	<select id="countUser" resultType="int">
+		select count(member_id) from member WHERE regdate>=date_add(now(), INTERVAL -1 MONTH )
+	</select>
+	<!-- 관리자가 회원 수정할 경우 -->
+	<update id="updateByAdmin" parameterType="Member">
+		update member set 
+		storename=#{storename}, profile_img=#{profile_img}, user_grade=#{user_grade} 
+		where member_id=#{member_id}
+	</update>
+	<select id="selectGoodUser" resultType="Member">
+	<![CDATA[
+		select * from member where user_grade > 1 and user_grade < 4
+	]]>
+	</select>
+	<select id="selectBadUser" resultType="Member">
+		select * from member where user_grade > 7
+	</select>
+	
+
+</mapper>

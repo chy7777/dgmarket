@@ -1,0 +1,305 @@
+
+/* 이미지 슬라이더 */
+.carousel img{
+    height: 400px;
+}
+.carousel h5{
+    font-size: 50px;
+    font-weight: bolder;
+    text-shadow: -2px 0 black, 0 2px black, 2px 0 black, 0 -2px black;
+    font-family: 'Jua', sans-serif;
+    /* -webkit-text-stroke-width: 1px;
+	-webkit-text-stroke-color: black */
+
+}
+
+
+/* 신상품 상품진열 */
+
+.btn btn-primary{
+	cursor: pointer;
+}
+
+.product1{
+    /* float: left;
+    position: relative; */
+    text-align: center;
+}
+.product-suggestion{
+    font-size: 50px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 50px;
+    font-family: 'Single Day', cursive;
+}
+
+
+.card{
+    display:inline-block;
+    /* position: relative;
+    float: left; */
+    margin: 50px;
+}
+.card img{
+    height: 330px;
+}
+
+.card:hover{
+    -webkit-box-shadow: -1px 9px 40px -12px rgba(0,0,0,0.75);
+    -moz-box-shadow: -1px 9px 40px -12px rgba(0,0,0,0.75);
+    box-shadow: -1px 9px 40px -12px rgba(0,0,0,0.75);;
+}
+
+/* 인기상품 상품진열 */
+.product2{
+    position: relative;
+    float: left;
+    width: 100%;
+    margin: auto;
+    background: lightgray;
+    text-align: center;
+}
+.price-suggestion{
+    font-size: 50px;
+    font-weight: bold;
+    margin-top: 20px;
+    font-family: 'Nanum Pen Script', cursive;
+}
+
+.product2 .card .card-orginprice{
+    float: left;
+    text-decoration: line-through;
+}
+.product2 .card .card-discountprice{
+    /* float: left; */
+    margin-left: 70px;
+}
+.product2 .card .btn{
+
+}
+.card-body{
+    text-align: left;
+}
+
+
+
+
+
+/***********************************************************
+상세보기 페이지
+***********************************************************/
+
+#product-detail{
+    width: 100%;
+    height: 700px;
+}
+
+#product-img{
+    height: 480px;
+    margin-top: 15px;
+}
+
+.img-fluid{
+    height: 500px;
+}
+
+#product-choice{
+    height: 600px;
+}
+.top-line{
+    height:3px;
+    border:none;
+    background-color:rgb(160, 160, 160);
+}
+
+.product-name h2{
+    font-size: 30px;
+    font-weight: bold;
+    font-family: 'Nanum Gothic Coding', monospace;
+}
+
+#product-price{
+    margin-left: 20px;
+    font-size: 20px;
+    height: 50px;
+    margin-top: 20px;
+    vertical-align: middle;
+}
+
+#product-desc  .col-sm-4, .col-sm-6{
+    margin-top: 20px;
+    margin-bottom: 10px;
+    height: 40px;
+    margin-left: 20px;
+}
+
+.col-md-6, .col-md-3, .col-md-2{
+    height: 50px;
+    margin-top: 20px;
+    margin-left: 0px;
+}
+
+
+
+
+#product-cart{
+    height: 200px;
+}
+
+#detail-bt{
+    margin: 0%;
+    width: 100%;
+    height: 100px;
+    border: 1px black solid;
+    font-size: 25px;
+}
+
+
+
+
+
+
+#product-related{
+    height: 300px;
+    width: 100%;
+    background: lightslategrey;
+}
+
+
+
+/***********************************************************
+장바구니 페이지
+***********************************************************/
+
+.cart-title{
+    height: 200px;
+    font-size: 50px;
+    font-weight: bold;
+    text-align: center;
+    margin-top: 3%;
+}
+
+
+
+#cart-main{
+    height: 1000px;
+
+}
+
+#product-thumbnail{
+    width: 90px;
+    height: 130px;
+    margin-right: 0%;
+    padding-right: 0%;
+}
+
+#cart-check{
+
+    padding-right: 0%;
+}
+
+#cart-detail{
+    margin-left: 0%;
+    margin-right: 0%;
+    padding-left: 0%;
+    padding-right: 0%;
+    margin-top: 50px;
+    font-size: 20px;
+    font-weight: bold;
+}
+#cart-count{
+    width: 100px;
+    text-align: center;
+    border: 1.5px solid rgb(114, 114, 114);
+    margin-bottom: 20px;
+    margin-left: 60%;
+}
+
+#minus{
+    font-size: 15px;
+    color: rgb(100, 100, 100);
+}
+#plus{
+    font-size: 15px;
+    color: rgb(100, 100, 100);
+}
+
+#location{
+    text-align: center;
+    padding-left: 0px;
+}
+
+#location button{
+    width: 90%;
+}
+
+#product-order button{
+    width: 100%;
+    height: 50px;
+}
+
+
+
+/***********************************************************
+푸터
+***********************************************************/
+
+#footer #line1{
+    border: 0px;
+    height: 3px;
+    background: rgb(53, 53, 53);
+    width: 100%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+
+
+
+#footer #line2{
+    border: 0px;
+    height: 3px;
+    background: rgb(206, 206, 206);
+    width: 100%;
+    text-align: center;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#company-cs{
+    margin-top: 0px;
+    margin-bottom: 0px;
+    border-right: 2px solid rgb(206, 206, 206);
+    height: 100%;
+}
+#company-cs span{
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+
+#company-bank{
+    margin-top: 0px;
+    margin-bottom: 0px;
+    height: 100%;
+}
+
+#company-bank span{
+    font-weight: bold;
+    margin-right: 20px;
+}
+
+#company_info{
+    width: 100%;
+    height: 200px;
+}
+
+#company_info .graycolor{
+    font-size: 20px;
+    font-weight: bold;
+    color: rgb(116, 116, 116);
+    margin-right: 10px;
+    margin-left: 10px;
+}
+

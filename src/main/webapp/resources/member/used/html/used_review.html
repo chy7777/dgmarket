@@ -1,0 +1,145 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Review</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css">
+<!-- jQuery library -->
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+<!-- Popper JS -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.16.0/umd/popper.min.js"></script>
+<!-- Latest compiled JavaScript -->
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.5.2/js/bootstrap.min.js" alt></script>
+<style>
+body{
+    margin: 0px;
+}
+
+.wrapper{
+    margin: auto;
+    width: 60%;
+    border-left: 2px solid black;
+    border-right: 2px solid black;
+}
+
+.user_container{
+    border: 2px solid black;
+    width : 40%;
+    margin : auto;
+    border-radius: 7px;
+}
+
+.content_container{
+    width : 90%;
+    margin-top: 50px;
+    padding-left : 35px;
+    padding-right: 35px;
+
+    margin : auto;
+}
+
+.card img{
+    width: 100%;
+    height: 200px;
+}
+
+</style>
+<script>
+
+
+</script>
+</head>
+<body>
+    <div class="wrapper text-center" style="padding-top: 50px;">
+        <!-- 상점 주인의 정보를 나타내는 박스 -->
+        <div class="user_container">
+            <!-- 회원가입을 할 때 등록한 사진이 들어올 곳 -->
+            <img src="data:image/jpeg;base64,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" 
+            class="rounded-circle" style="margin-top: 25px;" alt="Cinque Terre" width="304" height="236"> 
+            <div class="alert alert-success" style="width: 100%; margin: auto; margin-top: 25px;">
+                <!-- 상점명이 들어올 곳! -->
+                <strong>[최준]님의 상점</strong> 
+            </div>
+        </div>
+
+        <!-- 개인상점에서 카테고리를 선택할 수 있는 네비 -->
+        <div class="category_container" style="margin: auto; width: 100%; margin-top: 20px; margin-bottom: 20px;">
+            <ul class="nav justify-content-center">
+                <!-- if(session.멤버아이디 == 현재 보고 있는 상점.멤버아이디가 같다면) {
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><h5>정보수정</h5></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><h5>판매목록</h5></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><h5>채팅목록</h5></a>
+                </li>
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><h5>찜목록</h5></a>
+                </li>
+                }-->
+
+                <!-- else{ 세션에과 상점의 멤버 아이디가 다르다면 -->
+                <li class="nav-item">
+                    <a class="nav-link" href="#"><h5>1 : 1 대화하기</h5></a>
+                </li>
+                <!-- } -->
+            </ul>
+        </div>
+
+        <hr>
+
+        <!-- 내가 등록한 상품과 찜한 상품, 상품 후기를 볼 수 있는 박스 -->
+        <div class="content_container" style="padding-top: 30px;">
+            
+
+            <div class="review_container">
+                <div class="row text-left">
+                    <div class="col-sm-10"><h4>[최준]님 상점 이용 후기</h4></div>
+                    <div class="col-sm-2"><h5><a href="#">더보기+</a></h5></div>
+                </div>
+                <table class="table">
+                    <thead>
+                        <tr>
+                            <th>후기</th>
+                            <th>작성자</th>
+                            <th>작성일</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>늦은 시간임에도 친절하심</td>
+                            <td>중고왕조성일</td>
+                            <td>2021/07/20</td>
+                        </tr>
+                        <tr>
+                            <td>친절하신데 연락이 느림..</td>
+                            <td>르브론제임스</td>
+                            <td>2016/11/10</td>
+                        </tr>
+                        <tr>
+                            <td>거래 감사합니다.</td>
+                            <td>거래응애</td>
+                            <td>2012/02/22</td>
+                        </tr>
+                        <tr>
+                            <td>물건이 좀 구리네요;</td>
+                            <td>성일친척</td>
+                            <td>2012/01/20</td>
+                        </tr>
+                        <tr>
+                            <td>거래 감사합니다.</td>
+                            <td>거래응애</td>
+                            <td>2002/12/07</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

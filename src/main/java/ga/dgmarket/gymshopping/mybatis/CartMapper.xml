@@ -1,0 +1,49 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Cart">
+		
+	<!-- 카트에 상품 1건 담기 -->
+	<insert id="insert" parameterType="Cart">
+		insert into cart(product_id, member_id, ea) values(#{product_id},#{member_id} ,#{ea})
+	</insert>
+	
+	<!-- 해당 회원의 카트목록 가져오기  -->
+	<select id="selectAll" parameterType="int" resultType="Cart">
+		select product_img, product_name, price, ea
+		from member m, product p , cart c
+		where m.member_id=c.member_id and p.product_id=c.product_id
+		and c.member_id=#{member_id}
+	</select>	
+
+	<!-- Product 와 조인해서 가져오기 -->
+	<resultMap type="Cart" id="cartProductMap">
+		<id column="cart_id" property="cart_id"/>
+		<result column="member_id" property="member_id"/>				
+		<result column="ea" property="ea"/>	
+		<association column="product_id" property="product" javaType="Product" select="Product.select"/>			
+	</resultMap>
+	<select id="selectAllJoin" parameterType="int" resultMap="cartProductMap">
+		select * from cart where member_id=#{member_id}
+	</select>
+
+	<!-- 카트수정 -->
+	<update id="update" parameterType="Cart">
+		update cart set ea=#{ea} where cart_id=#{cart_id}
+	</update>
+	
+	<!-- 장바구니 1건 삭제 -->
+	<delete id="delete" parameterType="int">
+		delete from cart where cart_id=#{cart_id}
+	</delete>
+	
+	<!-- 주문완료 후 장바구니 삭제 -->
+	<delete id="afterOrderDelete" parameterType="int">
+		delete from cart where member_id=#{member_id};
+	</delete>
+	
+	<!-- 장바구니 비우기-->
+	<delete id="deleteAll" parameterType="Cart">
+		delete from cart where member_id=#{member_id}
+	</delete>
+	
+</mapper>

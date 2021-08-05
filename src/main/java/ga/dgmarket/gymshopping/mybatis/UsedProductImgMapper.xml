@@ -1,0 +1,34 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UsedProductImg">
+
+	<select id="selectProduct" resultType="UsedProductImg" parameterType="int">
+		select * from used_product_img where used_product_id=#{used_product_id}
+	</select>
+
+	<!-- 상품 등록 시 상품 이미지 디비에 저장 -->
+	<insert id="insert" parameterType="UsedProductImg">
+		insert into used_product_img(used_product_id, used_img, used_img_index)
+		values(#{used_product_id}, #{used_img}, #{used_img_index})
+	</insert>
+	
+	<!-- 찜한 상품 이미지 조회하기 -->
+	<select id="favoritesPre" parameterType="int" resultType="UsedProductImg">
+		select f.used_product_id as used_product_id, used_img 
+		from used_product_img i, used_favorites f 
+		where i.used_product_id=f.used_product_id and f.member_id=#{member_id} and i.used_img_index=0
+		order by f.used_product_id desc
+	</select>
+	
+	<!-- 내가 등록한 상품 이미지 조회하기 -->
+	<select id="productPre" parameterType="int" resultType="UsedProductImg">
+		select p.used_product_id as used_product_id, used_img 
+		from used_product_img i, used_product p 
+		where i.used_product_id=p.used_product_id and p.member_id=#{member_id} and i.used_img_index=0
+		order by p.used_product_id desc
+	</select>
+	
+	<delete id="delete" parameterType="int">
+		delete from used_product_img where used_product_id = #{used_product_id}
+	</delete>
+</mapper>

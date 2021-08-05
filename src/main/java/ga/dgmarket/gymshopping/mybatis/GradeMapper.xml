@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Grade">
+
+	<!-- 카테고리 호출 -->
+	<select id="selectAll" resultType="Grade">
+		select * from grade order by user_grade asc
+	</select>
+
+	<select id="select" parameterType="int" resultType="Grade">
+		select * from grade where user_grade=#{user_grade}
+	</select>
+</mapper>

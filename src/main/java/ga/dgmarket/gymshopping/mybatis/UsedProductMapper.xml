@@ -1,0 +1,149 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UsedProductExtend">
+	
+	<!-- 상품을 등록할 때 이미지와 tag를 동시에 입력하려면 방금 insert한 used_product_id를 알아야 한다.
+	따라서 selectKey를 이용하여 마지막에 insert된 pk를 반환하는 작업을 해야한다 from.성일 -->
+	<insert id="insert" parameterType="UsedProductExtend">
+		insert into used_product(member_id, used_product_name, used_product_detail, used_product_price)
+		values(#{member_id}, #{used_product_name}, #{used_product_detail}, #{used_product_price})
+		<selectKey order="AFTER" resultType="int" keyProperty="used_product_id">
+			select last_insert_id()
+		</selectKey>
+	</insert>
+	
+	<!-- 상품 목록을 조회 가져올 때 조인된 member, product_img의 정보를 포함 -->
+	<select id="selectAll" resultType="UsedProductExtend" parameterType="int">
+		select p.member_id, storename, p.used_product_id as used_product_id, p.used_product_name as used_product_name, 
+		p.used_product_price as used_product_price, used_img,
+		(select member_id from used_favorites f 
+		where p.used_product_id=f.used_product_id and f.member_id=#{member_id}) as favorites_member, (select used_favorites_id from used_favorites f 
+		where p.used_product_id=f.used_product_id and f.member_id=#{member_id}) as favorites_id
+		from used_product p, used_product_img i, member m
+		where p.used_product_id=i.used_product_id and m.user_grade!=7 and
+		i.used_img_index=0 and p.member_id=m.member_id and p.soldout='no'
+		order by p.used_product_id desc;
+	</select>
+	
+	<!-- 상품 상세 정보를 요청
+		추가적으로 상점의 이름과 찜을 했는지 알아보기 위한 used_favorites_id를 가져온다.
+		매개변수로 used_product_id와 member_id를 필요로 하기 때문에 UsedProductExtend에 담아서 넘겨 받을 예정
+	 -->
+	<select id="getDetail" resultType="UsedProductExtend" parameterType="UsedProductExtend">
+		select p.used_product_id as used_product_id, p.member_id as member_id, soldout
+		, used_product_name, used_product_detail, used_product_price, storename, 
+		(select used_favorites_id from used_favorites 
+		where member_id=#{member_id} and used_product_id=#{used_product_id}) as favorites_id
+		from used_product p, member m
+		where p.member_id=m.member_id and m.user_grade!=7 and p.used_product_id=#{used_product_id};
+	</select>
+	
+	<!-- 상품의 상태를 판매완료로 변경 soldout처리 -->
+	<update id="soldout" parameterType="int">
+		update used_product set soldout='yes' where used_product_id=#{used_product_id}
+	</update>
+	
+	<!-- 상품 한건 삭제하기 -->
+	<delete id="delete" parameterType="int">
+		delete from used_product where used_product_id=#{used_product_id}
+	</delete>
+	
+	<!-- 태그 검색을 이용해서 상품 조회하기 -->
+	<select id="selectByTagName" parameterType="UsedTag" resultType="UsedProductExtend">
+		select p.member_id, storename, p.used_product_id as used_product_id, p.used_product_name as used_product_name, 
+		p.used_product_price as used_product_price, used_img,
+		(select member_id from used_favorites f 				<!--tag안에 member_id 없길래.... 꼼수 쓴거임 -->
+		where p.used_product_id=f.used_product_id and f.member_id=#{used_product_id}) as favorites_member, (select used_favorites_id from used_favorites f 
+		where p.used_product_id=f.used_product_id and f.member_id=#{used_product_id}) as favorites_id
+		from used_product p, used_product_img i, member m, used_tag t
+		where p.used_product_id=i.used_product_id and i.used_img_index=0 and t.used_product_id=p.used_product_id and tag_name=#{tag_name}
+		and p.member_id=m.member_id and m.user_grade!=7 and p.soldout='no'
+		order by p.used_product_id desc;
+	</select>
+	
+	<!-- 상품명을 이용해서 상품 조회하기 -->
+	<select id="selectByProductName" parameterType="UsedProductExtend" resultType="UsedProductExtend">
+		select p.member_id, storename, p.used_product_id as used_product_id, p.used_product_name as used_product_name, 
+		p.used_product_price as used_product_price, used_img,
+		(select member_id from used_favorites f 
+		where p.used_product_id=f.used_product_id and f.member_id=#{member_id}) as favorites_member, (select used_favorites_id from used_favorites f 
+		where p.used_product_id=f.used_product_id and f.member_id=#{member_id}) as favorites_id
+		from used_product p, used_product_img i, member m
+		where p.used_product_id=i.used_product_id and i.used_img_index=0 and m.user_grade!=7 and
+		p.member_id=m.member_id and p.soldout='no' and used_product_name like concat('%', #{used_product_name}, '%')
+		order by p.used_product_id desc;
+	</select>
+	
+	<!-- 상점ID를 이용해서 상품 조회하기 -->
+	<select id="selectByStoreId" parameterType="UsedProductExtend" resultType="UsedProductExtend">
+		select p.member_id, storename, p.used_product_id as used_product_id, p.used_product_name as used_product_name, 
+		p.used_product_price as used_product_price, used_img,
+		(select member_id from used_favorites f 
+		where p.used_product_id=f.used_product_id and f.member_id=#{member_id}) as favorites_member, (select used_favorites_id from used_favorites f 
+		where p.used_product_id=f.used_product_id and f.member_id=#{member_id}) as favorites_id
+		from used_product p, used_product_img i, member m
+		where p.used_product_id=i.used_product_id and i.used_img_index=0 and m.user_grade!=7 and
+		p.member_id=m.member_id and p.soldout='no' and store_id=#{storename}<!-- 여기도 꼼수 씀  -->
+		order by p.used_product_id desc;
+	</select>
+	
+	<!-- 상점 이름을 이용해서 상품 조회하기 -->
+	<select id="selectByStoreName" parameterType="UsedProductExtend" resultType="UsedProductExtend">
+		select p.member_id, storename, p.used_product_id as used_product_id, p.used_product_name as used_product_name, 
+		p.used_product_price as used_product_price, used_img,
+		(select member_id from used_favorites f 
+		where p.used_product_id=f.used_product_id and f.member_id=#{member_id}) as favorites_member, (select used_favorites_id from used_favorites f 
+		where p.used_product_id=f.used_product_id and f.member_id=#{member_id}) as favorites_id
+		from used_product p, used_product_img i, member m
+		where p.used_product_id=i.used_product_id and i.used_img_index=0 and m.user_grade!=7 and
+		p.member_id=m.member_id and p.soldout='no' and storename like concat('%', #{storename}, '%')
+		order by p.used_product_id desc;
+	</select>
+	
+	<!-- 최대 가격을 이용해서 상품 조회하기 -->
+	<select id="selectByMaxPrice" parameterType="UsedProductExtend" resultType="UsedProductExtend">
+		select p.member_id, storename, p.used_product_id as used_product_id, p.used_product_name as used_product_name, 
+		p.used_product_price as used_product_price, used_img,
+		(select member_id from used_favorites f 
+		where p.used_product_id=f.used_product_id and f.member_id=#{member_id}) as favorites_member, (select used_favorites_id from used_favorites f 
+		where p.used_product_id=f.used_product_id and f.member_id=#{member_id}) as favorites_id
+		from used_product p, used_product_img i, member m
+		where p.used_product_id=i.used_product_id and i.used_img_index=0 and m.user_grade!=7 and
+		p.member_id=m.member_id and p.soldout='no' and used_product_price <![CDATA[<=]]> #{used_product_price}
+		order by p.used_product_id desc;
+	</select>
+	
+	<!-- 최소 가격을 이용해서 상품 조회하기 -->
+	<select id="selectByMinPrice" parameterType="UsedProductExtend" resultType="UsedProductExtend">
+		select p.member_id, storename, p.used_product_id as used_product_id, p.used_product_name as used_product_name, 
+		p.used_product_price as used_product_price, used_img,
+		(select member_id from used_favorites f 
+		where p.used_product_id=f.used_product_id and f.member_id=#{member_id}) as favorites_member, (select used_favorites_id from used_favorites f 
+		where p.used_product_id=f.used_product_id and f.member_id=#{member_id}) as favorites_id
+		from used_product p, used_product_img i, member m
+		where p.used_product_id=i.used_product_id and i.used_img_index=0 and m.user_grade!=7 and
+		p.member_id=m.member_id and p.soldout='no' and used_product_price <![CDATA[>=]]> #{used_product_price}
+		order by p.used_product_id desc;
+	</select>
+	
+	<!-- 내가 찜한 정보만 사용해서 상품 조회하기 -->
+	<select id="selectByFavorites" parameterType="int" resultType="UsedProductExtend">
+		select p.member_id, storename, p.used_product_id as used_product_id, p.used_product_name as used_product_name, 
+		p.used_product_price as used_product_price, used_img,
+		(select member_id from used_favorites f 
+		where p.used_product_id=f.used_product_id and f.member_id=#{member_id}) as favorites_member, (select used_favorites_id from used_favorites f 
+		where p.used_product_id=f.used_product_id and f.member_id=#{member_id}) as favorites_id
+		from used_product p, used_product_img i, member m, used_favorites f
+		where p.used_product_id=i.used_product_id and i.used_img_index=0 and 
+		p.member_id=m.member_id and p.soldout='no' and m.user_grade!=7 and f.used_product_id=p.used_product_id and f.member_id=#{member_id}
+		order by p.used_product_id desc
+	</select>
+	
+	<!-- 메인화면에 나올 최신순위 4개 리스트 from.도균-->
+	<select id="selectMainList" resultType="UsedProductExtend">
+		select p.used_product_id, p.used_product_name, p.used_product_price, i.used_img
+		from used_product p, used_product_img i, member m
+		where p.used_product_id=i.used_product_id and used_img_index=0 and m.member_id=p.member_id and m.user_grade != 7
+		order by p.used_product_id desc limit 4;
+	</select>	
+</mapper>

@@ -1,0 +1,63 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="Qna">
+	<!-- 한건 등록 -->
+	<insert id="insert" parameterType="Qna" >
+		insert into qna(member_id, title, content) values(#{member_id},#{title},#{content})
+		
+		<!-- insert 하자마자, 아래의 코드가 곧바로 수행된다 -->
+		<selectKey order="AFTER" resultType="int" keyProperty="qna_id">
+			select last_insert_id()
+		</selectKey>
+	</insert>
+	
+	<!-- team 업데이트 -->
+	<update id="updateTeam" parameterType="Qna">
+		update qna set team=#{qna_id} where qna_id=#{qna_id}	
+	</update>
+	
+	<update id="update" parameterType="Qna">
+		update set qna title = #{title}, content = #{content} where qna_id = #{qna_id}
+	</update>
+	
+	
+	<!-- 게시물 목록 -->
+	<select id="selectAll" resultType="Qna">
+		select  (select count(*)-1 from qna where team=q.team group by team) as cnt, user_grade,
+		m.storename as writer, q.qna_id, m.member_id, q.title, q.content, q.team, q.step, q.depth, q.regdate
+		from qna q, member m
+		where q.member_id=m.member_id
+		order by team desc, step asc;	
+	</select>
+	
+	<!-- 한건 가져오기 -->
+	<select id="select" parameterType="int" resultType="Qna">
+		select * from qna where qna_id=#{qna_id}
+	</select>
+	
+	<!-- 한건 삭제하기 댓글까지 삭제해야 하므로 team을 기준으로 삭제 처리 -->
+	<delete id="delete" parameterType="Qna">
+		delete from qna where team = #{qna_id}
+	</delete>
+	
+	<update id="delStep" parameterType="Qna">
+			update qna set step=step-1 where team=#{team} 
+			and depth=#{depth} and <![CDATA[ step > ]]> #{step} 
+	</update>
+
+	<!-- 댓글 한건 삭제 -->
+	<delete id="deleteReply" parameterType="Qna">
+		delete from qna where qna_id = #{qna_id}
+	</delete>
+	
+	<!-- 답변달기 (들어갈 자리 마련 + 답변글 등록)-->
+	<!--답변이 아닌 내가본글의 Qna  -->
+	<update id="updateStep" parameterType="Qna"> 
+		update qna set step=step+1 where <![CDATA[ step > ]]> #{step}  and team=#{team}			
+	</update>
+	
+	<insert id="reply" parameterType="Qna">
+		insert into qna(member_id, content, team, step, depth)  
+		values(#{member_id}, #{content}, #{team},  #{step}+1 , #{depth}+1)						
+	</insert>
+</mapper>

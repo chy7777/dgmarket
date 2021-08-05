@@ -1,0 +1,62 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans xmlns="http://www.springframework.org/schema/beans"
+	xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xmlns:context="http://www.springframework.org/schema/context"
+	xmlns:jee="http://www.springframework.org/schema/jee"
+	xmlns:p="http://www.springframework.org/schema/p"
+	xsi:schemaLocation="http://www.springframework.org/schema/jee http://www.springframework.org/schema/jee/spring-jee-4.3.xsd
+		http://www.springframework.org/schema/beans https://www.springframework.org/schema/beans/spring-beans.xsd
+		http://www.springframework.org/schema/context http://www.springframework.org/schema/context/spring-context-4.3.xsd">
+
+	<!-- Root Context: defines shared resources visible to all other web components -->
+	<!-- datasource 등록 -->
+	<jee:jndi-lookup id="dataSource" jndi-name="jndi/mysql"
+		resource-ref="true" />
+
+	<!-- 트랜잭션 매니저 등록 -->
+	<bean
+		class="org.springframework.jdbc.datasource.DataSourceTransactionManager"
+		id="transactionManager" p:dataSource-ref="dataSource" />
+
+	<!-- SqlSessionFactoryBean 등록 -->
+	<bean class="org.mybatis.spring.SqlSessionFactoryBean"
+		id="sqlSessionFactoryBean" p:dataSource-ref="dataSource"
+		p:configLocation="classpath:ga/dgmarket/gymshopping/mybatis/config.xml" />
+
+	<!-- SqlSessionTemplate 등록 -->
+	<bean class="org.mybatis.spring.SqlSessionTemplate"
+		id="sqlSessionTemplate">
+		<constructor-arg ref="sqlSessionFactoryBean" />
+	</bean>
+
+	<!-- 다중 파일 업로드를 위해 MultipartResolver를 사용하기 위한 빈 등록 -->
+	<bean id="multipartResolver"
+		class="org.springframework.web.multipart.commons.CommonsMultipartResolver" >
+		<property name="maxUploadSize" value="5242880"/><!-- 5MB 제한 -->
+		</bean>
+		
+	<bean id="mailSender" class="org.springframework.mail.javamail.JavaMailSenderImpl">
+	<!--  
+	<property name="host" value="smtp.gmail.com"/>
+	<property name="port" value="587"/>
+	<property name="username" value="vndn1679@gmail.com"/>
+	<property name="password" value="uhzdfwblytkeoeim"/>
+	<property name="javaMailProperties">
+	<props>
+	<prop key="mail.smtp.starttls.enable">true</prop>
+	<prop key="mail.smtp.auth">true</prop>
+	<prop key="mail.transport.protocol">smtp</prop>
+	<prop key="mail.debug">false</prop>
+	<prop key="mail.smtp.ssl.trust">smtp.gmail.com</prop>
+	</props>
+	</property>
+	-->
+	</bean>
+		
+	<!-- 위에서 등록한 빈들은 제외한 나머지 Service,DAO 등은 자동 검색하여 등록을 실시 @Service, @Repository 
+		등등 자동으로 메모리에 인스턴스 생성 그리고 해당 빈에 @Autowired가 등록되어 있다면, weaving 마저도 자동 등록 주입 -->
+	<context:component-scan
+		base-package="ga.dgmarket.gymshopping.model" />
+		
+	
+</beans>

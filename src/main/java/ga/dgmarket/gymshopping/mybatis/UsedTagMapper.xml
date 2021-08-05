@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UsedTag">
+
+	<insert id="insert" parameterType="UsedTag">
+		insert into used_tag(used_product_id, tag_name) values(#{used_product_id}, #{tag_name})
+	</insert>
+	
+	<select id="getProductTag" parameterType="int" resultType="UsedTag">
+		select * from used_tag where used_product_id=#{used_product_id}
+	</select>
+	
+	<delete id="delete" parameterType="int">
+		delete from used_tag where used_product_id=#{used_product_id}
+	</delete>
+</mapper>

@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="UsedFavorites">
+	<!-- 찜 정보 한건 조회 -->
+	<select id="select" parameterType="int" resultType="UsedFavorites">
+		select * from used_favorites where used_favorites_id=#{used_favorites_id}
+	</select>
+	
+	<!-- 한 상품에 대한 찜의 갯수 조사 -->
+	<select id="getFavoritesCount" parameterType="int" resultType="UsedFavorites">
+		select count(*) as count from used_favorites where used_product_id=#{used_product_id} group by used_product_id;
+	</select>
+	
+	<!-- 한 상품에 대한 전체 찜 목록 삭제하기 -->
+	<delete id="delete" parameterType="int">
+		delete from used_favorites where used_product_id=#{used_product_id}
+	</delete>
+	
+	<!-- 찜 한 건 넣기 반환 값은 pk -->
+	<insert id="insert" parameterType="UsedFavorites">
+		insert into used_favorites(member_id, used_product_id) values(#{member_id}, #{used_product_id})
+		<selectKey order="AFTER" keyProperty="used_favorites_id" resultType="int">
+			select last_insert_id()
+		</selectKey>
+	</insert>
+	
+	<!-- 찜 한 건 삭제 -->
+	<delete id="deleteOne" parameterType="int">
+		delete from used_favorites where used_favorites_id=#{used_favorites_id}
+	</delete>
+</mapper>
+

@@ -1,0 +1,69 @@
+
+--product와 img 분할(한 제품에 여러 이미지가 들어갈 수 있으므로)
+alter table product drop column product_img;
+
+create table product_img(img_no int primary key auto_increment
+, img_name varchar(16));
+
+--Alter문 이용한 외래 키 설정
+alter table product_img add product_id int;  (<-- img테이블 생성 시 product의 primary키 누락..)
+alter table product_img add constraint product_img_product foreign key(product_id) references product(product_id);
+
+--관리자 계정
+create table admin(admin_id int primary key auto_increment
+, host_id varchar(32)
+, password varchar(32)
+, name varchar(16)
+, profile_img varchar(32)
+, regdate timestamp default now()
+) default character set utf8;
+
+--최근 한달 간 가입한 가입자의 수
+select count(member_id) from member WHERE regdate>=date_add(now(), INTERVAL -1 MONTH )
+
+--테스트용 product
+INSERT into product(sub_category_id, product_name, product_detail, price)
+values(1,'테스트용더미','데이터입니다',123000);
+
+--일반 사용자 등급 추가 (판매자, 블랙리스트) 등.. /석민
+alter table member add user_grade int not null default 1;
+
+--상품 재고, 브랜드, 단일이미지 추가 /석민
+ALTER table product add product_inven int not null default 0;
+ALTER table product add brand varchar(32) not null;
+ALTER table product add product_img varchar(32);
+
+--포린키 해제/재지정 (포린키 때문에 삭제/수정 안되는 데이터테이블에 사용)
+set foreign_key_checks = 0; // 해제
+set foreign_key_checks = 1; // 지정
+
+--유저 계급 테이블(grade)
+create table grade(user_grade int primary key auto_increment, grade_name varchar(20)
+)default character set utf8;
+
+--카테고리별 상품 수
+select p.top_category_id, tc.top_name, COUNT(tc.top_name) as cnt from product p, top_category tc 
+WHERE p.top_category_id = tc.top_category_id 
+group by p.top_category_id, tc.top_name  ;
+
+--일일 등록 상품 수
+select COUNT(product_id) as cnt from product where regdate > date_format(curdate( ), '%Y-%m-%d %H:%i:%s' ) ;
+
+--n일 전 데이터
+select COUNT(product_id) as cnt from product where regdate >=(CURDATE()-INTERVAL n DAY)
+and regdate <=(CURDATE()-INTERVAL n-1 DAY);
+
+--거래 된 상품
+create table soldproduct (
+sold_id int primary key auto_increment
+, product_id int
+, price int
+, ea int
+, member_id int
+, constraint productsold
+ foreign key (product_id)
+ references product (product_id)
+, constraint memberbuy
+foreign key (member_id)
+references member (member_id)
+)default character set utf8;
